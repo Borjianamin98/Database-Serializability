@@ -14,4 +14,5 @@ def start(file_path: str):
     print(schedule)
     conflict_serializability = ConflictSerializability(schedule)
     conflict_serializability.calculate_preceding_graph()
-    conflict_serializability.draw_preceding_graph()
+    is_conflict_serializable, cycle_path = conflict_serializability.is_conflict_serializable()
+    conflict_serializability.draw_preceding_graph(cycle_path)

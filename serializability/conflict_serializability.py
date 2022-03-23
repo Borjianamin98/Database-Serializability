@@ -9,8 +9,7 @@ from schedule.schedule import Schedule
 
 class ConflictSerializability:
     """
-    Class used to check conflict serializability of schedule. Also provide some useful functions to draw preceding
-    graph, etc.
+    Class used to check conflict serializability of schedule.
     """
 
     def __init__(self, schedule: Schedule):
@@ -54,17 +53,37 @@ class ConflictSerializability:
 
         self.preceding_graph = preceding_graph
 
-    def draw_preceding_graph(self):
+    def draw_preceding_graph(self, marked_path: List[Tuple[int, int]] = None):
         if not self.preceding_graph:
-            raise ValueError("Calculate preceding graph should be called before calling draw")
+            raise ValueError("Calculate preceding graph should be called before")
 
         net = Network(height="100%", width="100%", directed=True)
+        net.set_edge_smooth("curvedCW")
         for node in self.preceding_graph.nodes:
             net.add_node(node, shape="circle")
         for source, target in self.preceding_graph.edges:
             net.add_edge(source, target)
+        if marked_path:
+            for source, destination in marked_path:
+                net.add_edge(source, destination, color="red")
+
         net.show_buttons(filter_=['physics'])
         net.show(f"preceding-graph.html")
+
+    def is_conflict_serializable(self) -> Tuple[bool, List[Tuple[int, int]]]:
+        """
+        Returns tuple consist of whether schedule is serializable or not, in addition to cycle path in graph
+        if precedence graph is not conflict serializable (contains cycle)
+        :return: tuple of <is conflict serializable, precedence cycle path>
+        """
+        if not self.preceding_graph:
+            raise ValueError("Calculate preceding graph should be called before")
+
+        try:
+            cycle_path = nx.find_cycle(self.preceding_graph)
+            return False, [(int(src), int(dest)) for src, dest in cycle_path]
+        except nx.exception.NetworkXNoCycle:
+            return True, []
 
     @staticmethod
     def __any_read_write_on(operations: List[Operation], variable_name: str):
