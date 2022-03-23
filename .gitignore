@@ -1,8 +1,9 @@
 # User-specific stuff
 .idea/**
 
-# Html output file
-*.html
+# Runtime generated HTML files
+html/graphs/*.html
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -9,6 +9,7 @@ numpy = "*"
 matplotlib = "*"
 pyvis = "0.1.9"
 scipy = "*"
+Jinja2 = "*"
 
 [dev-packages]
 

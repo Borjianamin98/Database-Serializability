@@ -2,6 +2,8 @@ from exceptions.file_exceptions import InvalidFileFormatException
 from parse.parser import parse
 from serializability.conflict_serializability import ConflictSerializability
 from utility import exception_utility
+from view import view_generator
+from view.view_generator import PRECEDING_GRAPH_FILE_PATH
 
 
 def start(file_path: str):
@@ -15,4 +17,7 @@ def start(file_path: str):
     conflict_serializability = ConflictSerializability(schedule)
     conflict_serializability.calculate_preceding_graph()
     is_conflict_serializable, cycle_path = conflict_serializability.is_conflict_serializable()
-    conflict_serializability.draw_preceding_graph(cycle_path)
+    conflict_serializability.export_preceding_graph(PRECEDING_GRAPH_FILE_PATH, cycle_path)
+
+    view_generator.generate_view()
+    view_generator.open_index_html()
