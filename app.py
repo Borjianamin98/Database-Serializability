@@ -1,5 +1,6 @@
 from exceptions.file_exceptions import InvalidFileFormatException
 from parse.parser import parse
+from serializability.conflict_serializability import ConflictSerializability
 from utility import exception_utility
 
 
@@ -10,6 +11,7 @@ def start(file_path: str):
         exception_utility.print_exception_chain(e)
         return 1
 
-    print(variable_initial_values)
     print(schedule)
-    schedule.run_schedule(variable_initial_values)
+    conflict_serializability = ConflictSerializability(schedule)
+    conflict_serializability.calculate_preceding_graph()
+    conflict_serializability.draw_preceding_graph()

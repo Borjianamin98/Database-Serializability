@@ -1,4 +1,4 @@
-from typing import Tuple, List
+from typing import Tuple, List, Iterable
 
 from schedule.operation import Operation
 
@@ -40,12 +40,12 @@ class Schedule:
             if not operation.is_arithmetic():
                 yield transaction_number, operation
 
-    def get_non_arithmetic_operations_count(self) -> dict[int, int]:
-        return {t: Schedule.__non_arithmetic_operations_count(ops) for t, ops in self.transaction_operations}
+    def get_non_arithmetic_operations(self) -> dict[int, List[Operation]]:
+        return {t: Schedule.__non_arithmetic_operations(ops) for t, ops in self.transaction_operations.items()}
 
     @staticmethod
-    def __non_arithmetic_operations_count(operations: List[Operation]) -> int:
-        return sum(1 for op in operations if not op.is_arithmetic())
+    def __non_arithmetic_operations(operations: List[Operation]) -> Iterable[Operation]:
+        return [op for op in operations if not op.is_arithmetic()]
 
     def __str__(self):
         return (

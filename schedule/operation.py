@@ -44,6 +44,9 @@ class Operation:
         assert self.is_arithmetic()
         return self.result
 
+    def is_read_write_on(self, variable: str):
+        return self.operand1 == variable
+
     @staticmethod
     def __get_operand_value(variables: dict[str, int], operand: str) -> int:
         if str.isnumeric(operand):
