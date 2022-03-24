@@ -35,6 +35,9 @@ class Schedule:
             else:
                 in_memory_state[operation.result_variable()] = operation.do_arithmetic(in_memory_state)
 
+    def schedule_transactions_count(self):
+        return len(self.transaction_operations.keys())
+
     def get_schedule_non_arithmetic_operations(self) -> List[Tuple[int, Operation]]:
         for transaction_number, operation in self.schedule_operations:
             if not operation.is_arithmetic():

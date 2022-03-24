@@ -54,6 +54,12 @@ class Operation:
         else:
             return variables[operand]
 
+    def get_html_view(self):
+        if self.is_arithmetic():
+            return f"{self.result} = {self.operand1} {self.operator} {self.operand2}"
+        else:
+            return f"{self.operator}({self.operand1})"
+
     def __str__(self):
         if self.is_arithmetic():
             return f"Operation['{self.result}' = '{self.operand1}' '{self.operator}' '{self.operand2}']"

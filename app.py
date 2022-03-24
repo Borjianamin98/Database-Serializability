@@ -19,5 +19,9 @@ def start(file_path: str):
     is_conflict_serializable, cycle_path = conflict_serializability.is_conflict_serializable()
     conflict_serializability.export_preceding_graph(PRECEDING_GRAPH_FILE_PATH, cycle_path)
 
-    view_generator.generate_view()
-    view_generator.open_index_html()
+    view_generator.generate_view(
+        schedule_operations=schedule.schedule_operations,
+        total_schedule_transactions=schedule.schedule_transactions_count(),
+        is_conflict_serializable=is_conflict_serializable
+    )
+    # view_generator.open_index_html()
