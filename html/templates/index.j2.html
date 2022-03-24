@@ -48,18 +48,18 @@
                 <tr>
                     <th scope="col">#</th>
                     {%- for transaction_number in range(1, total_schedule_transactions + 1) %}
-                    <th scope="col">T{{ transaction_number }}</th>
+                        <th scope="col">T{{ transaction_number }}</th>
                     {%- endfor %}
                 </tr>
                 </thead>
                 <tbody>
                 {%- for transaction_number, operation in schedule_operations %}
-                <tr>
-                    <th scope="row">{{ loop.index }}</th>
-                    {%- for i in range(1, total_schedule_transactions + 1) %}
-                    <td>{{ operation.get_html_view() if i == transaction_number else '' }}</td>
-                    {%- endfor %}
-                </tr>
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        {%- for i in range(1, total_schedule_transactions + 1) %}
+                            <td>{{ operation.get_html_view() if i == transaction_number else '' }}</td>
+                        {%- endfor %}
+                    </tr>
                 {%- endfor %}
                 </tbody>
             </table>
@@ -73,22 +73,22 @@
             conflict equivalent criteria.
         </p>
         {%- if not is_conflict_serializable %}
-        <p class="lead">
-            Due to the fact that the design is not serializable, the preceding graph has a cycle that is shown in
-            <span class="text-danger"><strong>red</strong></span>
-            color.
-        </p>
+            <p class="lead">
+                Due to the fact that the design is not serializable, the preceding graph has a cycle that is shown in
+                <span class="text-danger"><strong>red</strong></span>
+                color.
+            </p>
         {%- endif %}
         {%- if conflict_serializable_schedule %}
-        <p class="lead">Equivalent serial schedule: </p>
-        <div>
-            {%- for transaction_number in conflict_serializable_schedule %}
-            <span class="align-middle">T{{ transaction_number }}</span>
-            {%- if not loop.last %}
-            <i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
-            {%- endif %}
-            {%- endfor %}
-        </div>
+            <p class="lead">Equivalent serial schedule: </p>
+            <div>
+                {%- for transaction_number in conflict_serializable_schedule %}
+                    <span class="align-middle">T{{ transaction_number }}</span>
+                    {%- if not loop.last -%}
+                        <i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
+                    {%- endif %}
+                {%- endfor %}
+            </div>
         {%- endif %}
 
         <div class="embed-responsive embed-responsive-21by9">
