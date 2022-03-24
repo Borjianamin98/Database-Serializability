@@ -13,15 +13,18 @@ def start(file_path: str):
         exception_utility.print_exception_chain(e)
         return 1
 
-    print(schedule)
     conflict_serializability = ConflictSerializability(schedule)
     conflict_serializability.calculate_preceding_graph()
     is_conflict_serializable, cycle_path = conflict_serializability.is_conflict_serializable()
+    conflict_serializable_schedule = None
+    if is_conflict_serializable:
+        conflict_serializable_schedule = conflict_serializability.get_serializable_schedule()
     conflict_serializability.export_preceding_graph(PRECEDING_GRAPH_FILE_PATH, cycle_path)
 
     view_generator.generate_view(
         schedule_operations=schedule.schedule_operations,
         total_schedule_transactions=schedule.schedule_transactions_count(),
-        is_conflict_serializable=is_conflict_serializable
+        is_conflict_serializable=is_conflict_serializable,
+        conflict_serializable_schedule=conflict_serializable_schedule
     )
     # view_generator.open_index_html()

@@ -90,7 +90,6 @@ class ConflictSerializability:
           }
         }
         """)
-        print(net.options)
         net.write_html(output_path)
 
     def is_conflict_serializable(self) -> Tuple[bool, List[Tuple[int, int]]]:
@@ -107,6 +106,19 @@ class ConflictSerializability:
             return False, [(int(src), int(dest)) for src, dest in cycle_path]
         except nx.exception.NetworkXNoCycle:
             return True, []
+
+    def get_serializable_schedule(self):
+        """
+        Returns serializable schedule if preceding graph is DAG (conflict serializable)
+        :return: ordered list of nodes which define serializable schedule
+        """
+        if not self.preceding_graph:
+            raise ValueError("Calculate preceding graph should be called before")
+
+        try:
+            return list(nx.topological_sort(self.preceding_graph))
+        except nx.exception.NetworkXUnfeasible:
+            raise ValueError("Preceding graph is not conflict serializable")
 
     @staticmethod
     def __any_read_write_on(operations: List[Operation], variable_name: str):
