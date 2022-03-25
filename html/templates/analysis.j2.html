@@ -1,0 +1,83 @@
+{%- from "macros.j2.html" import embeded_graph with context %}
+{%- from "macros.j2.html" import print_serializable_schedule with context %}
+{%- from "navbar.j2.html" import navbar_model with context %}
+{%- call navbar_model() %}
+    <h1 class="mt-5 mb-4">Schedule Serializability</h1>
+    <p class="lead">
+        In this page, we see the final output of the schedule review in terms
+        of <strong>serializability</strong>.
+    </p>
+    <p class="lead">
+        In the following sections, we see the details of the schedule in terms of different serializability criteria.
+    </p>
+
+    <a id="conflict_serializability" href="#conflict_serializability" class="h2 text-decoration-none my-4">
+        Conflict Serializability
+    </a>
+    <p class="lead">
+        In this section, you will see preceding graph related to the conflict operations of schedule. <br/>
+        According to the preceding graph and the fundamental theorem, the corresponding schedule
+        is <strong>{{ 'not' if not is_conflict_serializable }} serializable</strong> based on
+        conflict equivalent criteria.
+    </p>
+    {%- if not is_conflict_serializable %}
+        <p class="lead">
+            Due to the fact that the design is not serializable, the preceding graph has a cycle that is shown in
+            <span class="text-danger"><strong>red</strong></span>
+            color.
+        </p>
+    {%- endif %}
+    {%- if conflict_serializable_schedule %}
+        <p class="lead">Equivalent serial schedule: </p>
+        {{ print_serializable_schedule(conflict_serializable_schedule) | indent(8) }}
+    {%- endif %}
+    {{ embeded_graph(preceding_graph_file_name) | indent(8) }}
+
+    <a id="view_serializability" href="#view_serializability" class="h2 text-decoration-none my-4">
+        View Serializability
+    </a>
+    <p class="lead">In this section, you will see polygraph related to schedule.</p>
+    <p class="lead">In this graph, 3 types of edges with different shapes/colors can be seen.</p>
+    <p class="lead">
+        A <em><strong>blue straight edges</strong></em> edge is created between transaction
+        <code>i</code> and <code>j</code> (directed edge) if transaction <code>i</code> changes the value of
+        a variable that transaction <code>j</code> reads it (value written by transaction <code>i</code>).
+        By placing the mouse pointer on these edges, you can see the variables that caused these edges.
+    </p>
+    <p class="lead">
+        If there is another transaction such as <code>k</code> that changes the value of variable
+        <code>x</code>, in order for transaction <code>j</code> to read exactly the value written by
+        transaction <code>i</code>, transaction <code>k</code> must precede transaction <code>i</code> or
+        after transaction <code>j</code>. (Of course, one of these two cases is enough) These cases are
+        indicated by <em><strong>blue dashed edge</strong></em>. However, sometimes only one of these
+        two cases may exist, for example, one case of it already exists, or one case of it is 'start'
+        or 'end' node. In these cases, these conditional edges become real edges, and these cases are
+        marked with <em><strong>green straight edge</strong></em>.
+    </p>
+    {{ embeded_graph(polygraph_file_name) | indent(8) }}
+    {%- if not is_view_serializable %}
+        <p class="lead">
+            According to the polygraph and different forms of it, the corresponding schedule
+            is <strong>not serializable</strong> based on view equivalent criteria.
+        </p>
+    {%- else %}
+        <p class="lead">
+            According to the polygraph and different forms of it, the following compatible graph
+            to polygraph is an directed acyclic graph (DAG):
+        </p>
+        {{ embeded_graph(polygraph_compatible_graph_file_name) | indent(8) }}
+        <p class="lead">
+            Because of existence of compatible DAG, the corresponding schedule is <strong>serializable</strong>
+            based on view equivalent criteria.
+        </p>
+        <p class="lead">Equivalent serial schedule: </p>
+        {{ print_serializable_schedule(view_serializable_schedule) | indent(8) }}
+    {%- endif %}
+
+    <a id="result_serializability" href="#result_serializability" class="h2 text-decoration-none my-4">
+        Result Serializability
+    </a>
+    <p class="lead">
+        In this section, ... <br/>
+    </p>
+{%- endcall -%}

@@ -11,7 +11,7 @@
 </div>
 {% endmacro -%}
 
-{% macro print_serializable_schedule(serializable_schedule) -%}
+{%- macro print_serializable_schedule(serializable_schedule) -%}
 <div>
     {%- for transaction_number in serializable_schedule %}
         <span class="align-middle">T<sub>{{ transaction_number }}</sub></span>
@@ -20,4 +20,4 @@
         {%- endif %}
     {%- endfor %}
 </div>
-{% endmacro -%}
+{%- endmacro -%}
