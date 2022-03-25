@@ -1,3 +1,6 @@
+from exceptions.schedule_exceptions import OperandVariableNotFoundException
+
+
 class Operation:
     """
     Abstract class represent an operation of transaction
@@ -36,26 +39,36 @@ class Operation:
         assert self.is_write() or self.is_read()
         return self.operand1
 
-    def do_arithmetic(self, variables: dict[str, int]) -> int:
-        assert self.is_arithmetic()
-        return eval(
-            f"{self.__get_operand_value(variables, self.operand1)} "
-            f"{self.operator} "
-            f"{self.__get_operand_value(variables, self.operand2)}"
-        )
-
-    def result_variable(self):
+    def get_result_variable(self) -> str:
         assert self.is_arithmetic()
         return self.result
 
     def is_read_write_on(self, variable: str):
         return self.operand1 == variable
 
+    def do_arithmetic(self, variables: dict[str, int]) -> int:
+        assert self.is_arithmetic()
+        return eval(self.get_with_actual_value(variables))
+
+    def get_with_actual_value(self, variables: dict[str, int]) -> str:
+        """
+        Return arithmetic operation in a from that actual value replaced variable names
+        :param variables: variable values
+        :return: actual arithmetic operation
+        """
+        return (
+            f"{self.__get_operand_value(variables, self.operand1)} "
+            f"{self.operator} "
+            f"{self.__get_operand_value(variables, self.operand2)}"
+        )
+
     @staticmethod
     def __get_operand_value(variables: dict[str, int], operand: str) -> int:
         if str.isnumeric(operand):
             return int(operand)
         else:
+            if operand not in variables:
+                raise OperandVariableNotFoundException(operand)
             return variables[operand]
 
     def get_html_view(self):

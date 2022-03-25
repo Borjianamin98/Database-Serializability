@@ -37,6 +37,9 @@ def start(file_path: str):
 
     result_serializability = ResultSerializability(schedule)
     is_result_serializable = result_serializability.is_result_serializable()
+    _, metadata = ResultSerializability.run_transaction_operations(variable_initial_values,
+                                                                   schedule.schedule_operations)
+    print(metadata)
 
     view_generator.generate_view(
         schedule_operations=schedule.schedule_operations,

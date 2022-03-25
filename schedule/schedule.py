@@ -22,19 +22,6 @@ class Schedule:
         self.transaction_operations = transaction_operations
         self.variable_to_writer_mapping = variable_to_writer_mapping
 
-    def run_schedule(self, in_memory_database: dict[str, int]):
-        in_memory_state: dict[str, int] = {}
-        for _, operation in self.schedule_operations:
-            print("state:", in_memory_state)
-            print("database:", in_memory_database)
-            print(operation)
-            if operation.is_read():
-                in_memory_state[operation.get_read_variable()] = in_memory_database[operation.get_read_variable()]
-            elif operation.is_write():
-                in_memory_database[operation.get_written_variable()] = in_memory_state[operation.get_written_variable()]
-            else:
-                in_memory_state[operation.result_variable()] = operation.do_arithmetic(in_memory_state)
-
     def get_schedule_transactions(self) -> KeysView[int]:
         return self.transaction_operations.keys()
 
