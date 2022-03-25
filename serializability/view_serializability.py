@@ -121,9 +121,6 @@ class ViewSerializability:
         net.write_html(output_path)
 
     def is_view_serializable(self) -> bool:
-        """
-        :return: true if schedule is serializable
-        """
         if not self.polygraph:
             raise ValueError("Calculate polygraph should be called before")
 

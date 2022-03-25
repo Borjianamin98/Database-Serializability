@@ -1,6 +1,7 @@
 from exceptions.file_exceptions import InvalidFileFormatException
 from parse.parser import parse
 from serializability.conflict_serializability import ConflictSerializability
+from serializability.result_serializability import ResultSerializability
 from serializability.view_serializability import ViewSerializability
 from utility import exception_utility
 from view import view_generator
@@ -34,6 +35,9 @@ def start(file_path: str):
         view_serializability.export_polygraph_dag_compatible_graph(POLYGRAPH_COMPATIBLE_DAG_FILE_PATH)
     view_serializability.export_polygraph(POLYGRAPH_FILE_PATH)
 
+    result_serializability = ResultSerializability(schedule)
+    is_result_serializable = result_serializability.is_result_serializable()
+
     view_generator.generate_view(
         schedule_operations=schedule.schedule_operations,
         schedule_transactions_count=len(schedule.get_schedule_transactions()),
@@ -43,5 +47,7 @@ def start(file_path: str):
 
         is_view_serializable=is_view_serializable,
         view_serializable_schedule=view_serializable_schedule,
+
+        is_result_serializable=is_result_serializable,
     )
     # view_generator.open_index_html()
