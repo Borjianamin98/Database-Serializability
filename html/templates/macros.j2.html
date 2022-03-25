@@ -1,0 +1,23 @@
+{% macro embeded_graph(graph_file_name) -%}
+<div class="embed-responsive embed-responsive-21by9">
+    <iframe
+            class="embed-responsive-item"
+            src="{{ graph_directory_name }}/{{ graph_file_name }}"
+            width="100%"
+            height="400"
+    >
+        Browser do not support showing graphs. Please update your browser.
+    </iframe>
+</div>
+{% endmacro -%}
+
+{% macro print_serializable_schedule(serializable_schedule) -%}
+<div>
+    {%- for transaction_number in serializable_schedule %}
+        <span class="align-middle">T<sub>{{ transaction_number }}</sub></span>
+        {%- if not loop.last -%}
+            <i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
+        {%- endif %}
+    {%- endfor %}
+</div>
+{% endmacro -%}

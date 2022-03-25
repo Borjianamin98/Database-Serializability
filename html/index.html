@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,8 +15,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
     <style>
-        main > .container {
-            padding: 60px 15px 0;
+        a {
+            display: inline-block
         }
     </style>
 </head>
@@ -22,9 +24,19 @@
 
 <header>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
         <div class="container-fluid">
             <span class="navbar-brand user-select-none">Schedule Serializability</span>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html">Analysis</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Schedule</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 </header>
@@ -40,41 +52,39 @@
             in terms of different serializability criteria.
         </p>
 
-        <h2 class="mb-4">Schedule Overview</h2>
+        <a id="schedule_overview" href="#schedule_overview" class="h2 text-decoration-none my-4">
+            Schedule Overview
+        </a>
         <p class="lead">An overview of the schedule transactions</p>
         <div class="table-responsive">
             <table class="table table-striped table-bordered table-sm text-nowrap text-center">
                 <thead class="thead-light">
                 <tr>
                     <th scope="col">#</th>
-                        <th scope="col">T1</th>
-                        <th scope="col">T2</th>
-                        <th scope="col">T3</th>
-                        <th scope="col">T4</th>
-                        <th scope="col">T5</th>
+                        <th scope="col">T<sub>1</sub></th>
+                        <th scope="col">T<sub>2</sub></th>
+                        <th scope="col">T<sub>3</sub></th>
+                        <th scope="col">T<sub>4</sub></th>
                 </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th scope="row">1</th>
+                            <td></td>
                             <td>R(a)</td>
-                            <td></td>
-                            <td></td>
                             <td></td>
                             <td></td>
                     </tr>
                     <tr>
                         <th scope="row">2</th>
-                            <td>a = a / 2</td>
-                            <td></td>
+                            <td>R(a)</td>
                             <td></td>
                             <td></td>
                             <td></td>
                     </tr>
                     <tr>
                         <th scope="row">3</th>
-                            <td>a = a + 1</td>
-                            <td></td>
+                            <td>W(c)</td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -82,16 +92,14 @@
                     <tr>
                         <th scope="row">4</th>
                             <td></td>
-                            <td>R(b)</td>
                             <td></td>
-                            <td></td>
+                            <td>R(c)</td>
                             <td></td>
                     </tr>
                     <tr>
                         <th scope="row">5</th>
+                            <td>W(b)</td>
                             <td></td>
-                            <td></td>
-                            <td>R(c)</td>
                             <td></td>
                             <td></td>
                     </tr>
@@ -100,38 +108,33 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td>R(d)</td>
-                            <td></td>
+                            <td>R(b)</td>
                     </tr>
                     <tr>
                         <th scope="row">7</th>
                             <td></td>
                             <td></td>
+                            <td>W(a)</td>
                             <td></td>
-                            <td></td>
-                            <td>R(e)</td>
                     </tr>
                     <tr>
                         <th scope="row">8</th>
-                            <td>W(a)</td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td></td>
+                            <td>R(c)</td>
                     </tr>
                     <tr>
                         <th scope="row">9</th>
                             <td></td>
-                            <td>W(b)</td>
-                            <td></td>
+                            <td>W(d)</td>
                             <td></td>
                             <td></td>
                     </tr>
                     <tr>
                         <th scope="row">10</th>
                             <td></td>
-                            <td></td>
-                            <td>W(c)</td>
+                            <td>R(b)</td>
                             <td></td>
                             <td></td>
                     </tr>
@@ -140,46 +143,22 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td>W(d)</td>
-                            <td></td>
+                            <td>W(a)</td>
                     </tr>
                     <tr>
                         <th scope="row">12</th>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td></td>
-                            <td>W(e)</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">13</th>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>W(a)</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">14</th>
-                            <td></td>
-                            <td></td>
-                            <td></td>
                             <td>W(b)</td>
-                            <td></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">15</th>
-                            <td></td>
-                            <td></td>
-                            <td>W(c)</td>
-                            <td></td>
-                            <td></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <h2 class="my-4">Conflict Serializability</h2>
+        <a id="conflict_serializability" href="#conflict_serializability" class="h2 text-decoration-none my-4">
+            Conflict Serializability
+        </a>
         <p class="lead">
             In this section, you will see preceding graph related to the conflict operations of schedule. <br/>
             According to the preceding graph and the fundamental theorem, the corresponding schedule
@@ -188,12 +167,11 @@
         </p>
             <p class="lead">Equivalent serial schedule: </p>
             <div>
-                    <span class="align-middle">T1</span><i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
-                    <span class="align-middle">T2</span><i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
-                    <span class="align-middle">T3</span><i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
-                    <span class="align-middle">T5</span><i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
-                    <span class="align-middle">T4</span>
-            </div>
+                <span class="align-middle">T<sub>1</sub></span><i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
+                <span class="align-middle">T<sub>2</sub></span><i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
+                <span class="align-middle">T<sub>3</sub></span><i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
+                <span class="align-middle">T<sub>4</sub></span>
+        </div>
 
         <div class="embed-responsive embed-responsive-21by9">
             <iframe
@@ -205,6 +183,61 @@
                 Browser do not support showing graphs. Please update your browser.
             </iframe>
         </div>
+
+
+        <a id="view_serializability" href="#view_serializability" class="h2 text-decoration-none my-4">
+            View Serializability
+        </a>
+        <p class="lead">
+            In this section, you will see polygraph related to schedule. <br/>
+        </p>
+        <div class="embed-responsive embed-responsive-21by9">
+            <iframe
+                    class="embed-responsive-item"
+                    src="graphs/all-polygraph.html"
+                    width="100%"
+                    height="400"
+            >
+                Browser do not support showing graphs. Please update your browser.
+            </iframe>
+        </div>
+
+            <p class="lead">
+                According to the polygraph and different forms of it, the following compatible graph
+                to polygraph is an directed acyclic graph (DAG):
+            </p>
+            <div class="embed-responsive embed-responsive-21by9">
+            <iframe
+                    class="embed-responsive-item"
+                    src="graphs/polygraph-compatible-dag.html"
+                    width="100%"
+                    height="400"
+            >
+                Browser do not support showing graphs. Please update your browser.
+            </iframe>
+        </div>
+
+            <p class="lead">
+                Because of existence of compatible DAG, the corresponding schedule is <strong>serializable</strong>
+                based on view equivalent criteria.
+            </p>
+            <p class="lead">Equivalent serial schedule: </p>
+            <div>
+                <span class="align-middle">T<sub>start</sub></span><i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
+                <span class="align-middle">T<sub>1</sub></span><i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
+                <span class="align-middle">T<sub>2</sub></span><i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
+                <span class="align-middle">T<sub>3</sub></span><i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
+                <span class="align-middle">T<sub>4</sub></span><i class="bi bi-arrow-right align-middle" style="color: cornflowerblue;"></i>
+                <span class="align-middle">T<sub>finish</sub></span>
+        </div>
+
+
+        <a id="result_serializability" href="#result_serializability" class="h2 text-decoration-none my-4">
+            Result Serializability
+        </a>
+        <p class="lead">
+            In this section, ... <br/>
+        </p>
     </div>
 </main>
 

@@ -32,6 +32,10 @@ class Operation:
         assert self.is_write()
         return self.operand1
 
+    def get_read_written_variable(self) -> str:
+        assert self.is_write() or self.is_read()
+        return self.operand1
+
     def do_arithmetic(self, variables: dict[str, int]) -> int:
         assert self.is_arithmetic()
         return eval(

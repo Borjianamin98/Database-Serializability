@@ -14,6 +14,11 @@ HTML_GRAPH_ROOT_DIRECTORY = f"{HTML_ROOT_DIRECTORY}/{GRAPH_ROOT_DIRECTORY_NAME}"
 PRECEDING_GRAPH_FILE_NAME = "preceding-graph.html"
 PRECEDING_GRAPH_FILE_PATH = f"{HTML_GRAPH_ROOT_DIRECTORY}/{PRECEDING_GRAPH_FILE_NAME}"
 
+POLYGRAPH_FILE_NAME = "all-polygraph.html"
+POLYGRAPH_FILE_PATH = f"{HTML_GRAPH_ROOT_DIRECTORY}/{POLYGRAPH_FILE_NAME}"
+POLYGRAPH_COMPATIBLE_DAG_FILE_NAME = "polygraph-compatible-dag.html"
+POLYGRAPH_COMPATIBLE_DAG_FILE_PATH = f"{HTML_GRAPH_ROOT_DIRECTORY}/{POLYGRAPH_COMPATIBLE_DAG_FILE_NAME}"
+
 
 def generate_view(**variables):
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIRECTORY))
@@ -23,7 +28,9 @@ def generate_view(**variables):
         file.write(template.render(
             **variables,
             graph_directory_name=GRAPH_ROOT_DIRECTORY_NAME,
-            preceding_graph_file_name=PRECEDING_GRAPH_FILE_NAME
+            preceding_graph_file_name=PRECEDING_GRAPH_FILE_NAME,
+            polygraph_file_name=POLYGRAPH_FILE_NAME,
+            polygraph_compatible_graph_file_name=POLYGRAPH_COMPATIBLE_DAG_FILE_NAME,
         ))
 
 

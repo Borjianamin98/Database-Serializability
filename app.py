@@ -1,9 +1,10 @@
 from exceptions.file_exceptions import InvalidFileFormatException
 from parse.parser import parse
 from serializability.conflict_serializability import ConflictSerializability
+from serializability.view_serializability import ViewSerializability
 from utility import exception_utility
 from view import view_generator
-from view.view_generator import PRECEDING_GRAPH_FILE_PATH
+from view.view_generator import PRECEDING_GRAPH_FILE_PATH, POLYGRAPH_FILE_PATH, POLYGRAPH_COMPATIBLE_DAG_FILE_PATH
 
 
 def start(file_path: str):
@@ -21,10 +22,23 @@ def start(file_path: str):
         conflict_serializable_schedule = conflict_serializability.get_serializable_schedule()
     conflict_serializability.export_preceding_graph(PRECEDING_GRAPH_FILE_PATH, cycle_path)
 
+    view_serializability = ViewSerializability(schedule)
+    view_serializability.calculate_polygraph()
+    is_view_serializable = view_serializability.is_view_serializable()
+    view_serializable_schedule = None
+    if is_view_serializable:
+        view_serializable_schedule = view_serializability.get_serializable_schedule()
+        view_serializability.export_polygraph_dag_compatible_graph(POLYGRAPH_COMPATIBLE_DAG_FILE_PATH)
+    view_serializability.export_polygraph(POLYGRAPH_FILE_PATH)
+
     view_generator.generate_view(
         schedule_operations=schedule.schedule_operations,
-        total_schedule_transactions=schedule.schedule_transactions_count(),
+        schedule_transactions_count=len(schedule.get_schedule_transactions()),
+
         is_conflict_serializable=is_conflict_serializable,
-        conflict_serializable_schedule=conflict_serializable_schedule
+        conflict_serializable_schedule=conflict_serializable_schedule,
+
+        is_view_serializable=is_view_serializable,
+        view_serializable_schedule=view_serializable_schedule,
     )
     # view_generator.open_index_html()

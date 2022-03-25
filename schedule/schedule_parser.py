@@ -89,7 +89,7 @@ def read_schedule_file(input_file_path: str, num_of_header_lines: int) -> Schedu
     """
 
     # Key: variable name, Value: list of writers (schedule numbers)
-    variable_to_writer_mapping: dict[str, List[int]] = {}
+    variable_to_writer_mapping: dict[str, set[int]] = {}
 
     # Key: transaction number, Value: list of operations
     transaction_operations: dict[int, List[Operation]] = {}
@@ -109,7 +109,7 @@ def read_schedule_file(input_file_path: str, num_of_header_lines: int) -> Schedu
             compute_if_absent(transaction_operations, transaction_number, lambda k: []).append(transaction_operation)
             if transaction_operation.is_write():
                 compute_if_absent(variable_to_writer_mapping, transaction_operation.get_written_variable(),
-                                  lambda k: []).append(transaction_number)
+                                  lambda k: set()).add(transaction_number)
             schedule_operations.append((transaction_number, transaction_operation))
 
     return Schedule(schedule_operations, transaction_operations, variable_to_writer_mapping)

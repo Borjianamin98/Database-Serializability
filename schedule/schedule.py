@@ -1,4 +1,4 @@
-from typing import Tuple, List, Iterable
+from typing import Tuple, List, Iterable, KeysView
 
 from schedule.operation import Operation
 
@@ -17,7 +17,7 @@ class Schedule:
     def __init__(self,
                  schedule_operations: List[Tuple[int, Operation]],
                  transaction_operations: dict[int, List[Operation]],
-                 variable_to_writer_mapping: dict[str, List[int]]):
+                 variable_to_writer_mapping: dict[str, set[int]]):
         self.schedule_operations = schedule_operations
         self.transaction_operations = transaction_operations
         self.variable_to_writer_mapping = variable_to_writer_mapping
@@ -35,8 +35,8 @@ class Schedule:
             else:
                 in_memory_state[operation.result_variable()] = operation.do_arithmetic(in_memory_state)
 
-    def schedule_transactions_count(self):
-        return len(self.transaction_operations.keys())
+    def get_schedule_transactions(self) -> KeysView[int]:
+        return self.transaction_operations.keys()
 
     def get_schedule_non_arithmetic_operations(self) -> List[Tuple[int, Operation]]:
         for transaction_number, operation in self.schedule_operations:

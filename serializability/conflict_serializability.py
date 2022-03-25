@@ -1,15 +1,15 @@
 from typing import List, Tuple
 
 import networkx as nx
-from pyvis.network import Network
 
 from schedule.operation import Operation
 from schedule.schedule import Schedule
+from utility.network_utility import create_network_from_nx
 
 
 class ConflictSerializability:
     """
-    Class used to check conflict serializability of schedule.
+    Class used to check conflict serializability of a schedule.
     """
 
     def __init__(self, schedule: Schedule):
@@ -57,39 +57,12 @@ class ConflictSerializability:
         if not self.preceding_graph:
             raise ValueError("Calculate preceding graph should be called before")
 
-        net = Network(height="90%", width="100%", directed=True, notebook=True)
-        for node in self.preceding_graph.nodes:
-            net.add_node(node, shape="circle")
-        for source, target in self.preceding_graph.edges:
-            net.add_edge(source, target)
+        net = create_network_from_nx(self.preceding_graph)
+
         if marked_path:
             for source, destination in marked_path:
                 net.add_edge(source, destination, color="red")
 
-        # Note: Active below line if you want to check modifying physic attributes
-        # net.show_buttons()
-        net.set_options("""
-        var options = {
-          "edges": {
-            "color": {
-              "inherit": true
-            },
-            "arrows": {
-              "to": {
-                "enabled": true,
-                "scaleFactor": 0.5
-              }
-            },
-            "smooth": {
-              "type": "curvedCW",
-              "forceDirection": "none"
-            }
-          },
-          "physics": {
-            "minVelocity": 0.75
-          }
-        }
-        """)
         net.write_html(output_path)
 
     def is_conflict_serializable(self) -> Tuple[bool, List[Tuple[int, int]]]:
