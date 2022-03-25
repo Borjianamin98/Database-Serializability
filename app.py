@@ -24,7 +24,10 @@ def start(file_path: str):
 
     view_serializability = ViewSerializability(schedule)
     view_serializability.calculate_polygraph()
-    is_view_serializable = view_serializability.is_view_serializable()
+    if not is_conflict_serializable and len(view_serializability.get_transactions_with_blind_write()) == 0:
+        is_view_serializable = False
+    else:
+        is_view_serializable = view_serializability.is_view_serializable()
     view_serializable_schedule = None
     if is_view_serializable:
         view_serializable_schedule = view_serializability.get_serializable_schedule()

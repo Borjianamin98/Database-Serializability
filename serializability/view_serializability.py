@@ -35,14 +35,13 @@ class ViewSerializability:
         self.is_serializable = False
 
     def calculate_polygraph(self):
-        # Specifies that the number of operations of the transaction has been processed.
-        # Key: transaction number, Value: tuple of <number of processed, total number> operations of transaction
-        # Note: Use List instead of tuple to have mutations but for automatic type inference, use tuple for type hint
+        # Specifies the transaction that last wrote the variable
+        # Key: variable name, Value: transaction number (in form of string to have 'start' and 'finish' transactions)
         last_writer_state: dict[str, str] = {}
 
         # Construct nodes and edges of polygraph
         polygraph: nx.DiGraph = nx.DiGraph()
-        for transaction_number, operation in self.schedule.get_schedule_non_arithmetic_operations():
+        for transaction_number, operation in self.schedule.get_non_arithmetic_operations_of_schedule():
             transaction_number_string = str(transaction_number)
             polygraph.add_node(transaction_number_string)
             read_written_variable = operation.get_read_written_variable()
@@ -158,9 +157,25 @@ class ViewSerializability:
             raise ValueError("Schedule is not view serializable")
 
         try:
-            return list(nx.topological_sort(self.serializable_graph))
+            # Remove 'start' and 'finish' nodes
+            return list(nx.topological_sort(self.serializable_graph))[1:-1]
         except nx.exception.NetworkXUnfeasible:
             raise ValueError("serializable graph is not valid (it should be a DAG)")
+
+    def get_transactions_with_blind_write(self):
+        transactions_with_blind_write = set()
+        for transaction, operations in self.schedule.get_non_arithmetic_operations_of_all_transactions().items():
+            # Specifies variable names which are read by transaction
+            read_variables: set[str] = set()
+
+            for operation in operations:
+                if operation.is_read():
+                    read_variables.add(operation.get_read_variable())
+                elif operation.is_write():
+                    if not operation.get_written_variable() in read_variables:
+                        transactions_with_blind_write.add(transaction)
+                        break
+        return transactions_with_blind_write
 
     def __find_serializable_graph_recursively(self, choices: list[Tuple[str, str, str]], current_index: int):
         if current_index >= len(choices):

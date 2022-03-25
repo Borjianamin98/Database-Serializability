@@ -38,12 +38,12 @@ class Schedule:
     def get_schedule_transactions(self) -> KeysView[int]:
         return self.transaction_operations.keys()
 
-    def get_schedule_non_arithmetic_operations(self) -> List[Tuple[int, Operation]]:
+    def get_non_arithmetic_operations_of_schedule(self) -> List[Tuple[int, Operation]]:
         for transaction_number, operation in self.schedule_operations:
             if not operation.is_arithmetic():
                 yield transaction_number, operation
 
-    def get_non_arithmetic_operations(self) -> dict[int, List[Operation]]:
+    def get_non_arithmetic_operations_of_all_transactions(self) -> dict[int, List[Operation]]:
         return {t: Schedule.__non_arithmetic_operations(ops) for t, ops in self.transaction_operations.items()}
 
     @staticmethod

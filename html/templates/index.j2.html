@@ -104,8 +104,23 @@
         <a id="view_serializability" href="#view_serializability" class="h2 text-decoration-none my-4">
             View Serializability
         </a>
+        <p class="lead">In this section, you will see polygraph related to schedule.</p>
+        <p class="lead">In this graph, 3 types of edges with different shapes/colors can be seen.</p>
         <p class="lead">
-            In this section, you will see polygraph related to schedule. <br/>
+            A <em><strong>blue straight edges</strong></em> edge is created between transaction
+            <code>i</code> and <code>j</code> (directed edge) if transaction <code>i</code> changes the value of
+            a variable that transaction <code>j</code> reads it (value written by transaction <code>i</code>).
+            By placing the mouse pointer on these edges, you can see the variables that caused these edges.
+        </p>
+        <p class="lead">
+            If there is another transaction such as <code>k</code> that changes the value of variable
+            <code>x</code>, in order for transaction <code>j</code> to read exactly the value written by
+            transaction <code>i</code>, transaction <code>k</code> must precede transaction <code>i</code> or
+            after transaction <code>j</code>. (Of course, one of these two cases is enough) These cases are
+            indicated by <em><strong>blue dashed edge</strong></em>. However, sometimes only one of these
+            two cases may exist, for example, one case of it already exists, or one case of it is 'start'
+            or 'end' node. In these cases, these conditional edges become real edges, and these cases are
+            marked with <em><strong>green straight edge</strong></em>.
         </p>
         {{ embeded_graph(polygraph_file_name) | indent(8) }}
         {%- if not is_view_serializable %}

@@ -23,12 +23,12 @@ class ConflictSerializability:
         # noinspection PyTypeChecker
         transaction_states: dict[int, Tuple[int, int, List[Operation]]] = {
             t: [0, len(operations), operations] for t, operations in
-            self.schedule.get_non_arithmetic_operations().items() if
+            self.schedule.get_non_arithmetic_operations_of_all_transactions().items() if
             len(operations) != 0
         }
 
         preceding_graph: nx.DiGraph = nx.DiGraph()
-        for cur_t, operation in self.schedule.get_schedule_non_arithmetic_operations():
+        for cur_t, operation in self.schedule.get_non_arithmetic_operations_of_schedule():
             transaction_states[cur_t][0] += 1
             preceding_graph.add_node(cur_t)
 

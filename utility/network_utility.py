@@ -1,13 +1,15 @@
 import networkx as nx
 from pyvis.network import Network
 
+from utility.string_utility import shorten_long_string
+
 
 def create_network_from_nx(graph: nx.Graph) -> Network:
     net = Network(height="90%", width="100%", directed=graph.is_directed(), notebook=True)
     for node in graph.nodes:
         net.add_node(node, shape="circle")
     for source, target, data in graph.edges(data=True):
-        converted_data = {k: str(v) for k, v in data.items()}
+        converted_data = {k: shorten_long_string(str(v)) for k, v in data.items()}
         net.add_edge(source, target, **converted_data)
 
     # Note: Active below line if you want to check modifying physic attributes
