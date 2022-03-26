@@ -88,10 +88,27 @@
         <p class="lead">Final state of database after execution of schedule:</p>
         <dl class="row">
             {%- for variable_name, variable_value in schedule_execution_final_database_state.items() %}
-                <dt class="col-1 text-truncate">{{ variable_name }}</dt>
+                <dt class="col-1 text-truncate">'{{ variable_name }}' value:</dt>
                 <dd class="col-1 text-truncate">{{ variable_value }}</dd>
             {%- endfor %}
         </dl>
+        <p class="lead">
+            For checking result serializability of a schedule, we should consider all permutations of transactions and
+            their final result in database. If any of them have same effect on database as given schedule, then given
+            schedule is serializable based on result equivalence criteria.
+        </p>
+        {%- if is_result_serializable %}
+            <p class="lead">
+                According to the executions, execution of the transaction as follows (serially) causes the same output
+                as the schedule, so schedule is <strong>serializable</strong> based on result equivalent criteria.
+            </p>
+            {{ transaction_operations_table(result_serializable_schedule_operations, result_serializable_execution_metadata) | indent(12) }}
+        {%- else %}
+            <p class="lead">
+                According to the executions, none of the permutation has the same output as the schedule and therefore
+                schedule is <strong>not serializable</strong> based on result equivalent criteria.
+            </p>
+        {%- endif %}
     {%- else %}
         <p class="lead text-danger">{{ schedule_execution_error | replace("\n", "<br/>") }}</p>
     {%- endif %}

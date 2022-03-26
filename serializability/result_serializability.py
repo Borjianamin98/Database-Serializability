@@ -1,4 +1,5 @@
-from typing import Tuple, List
+import itertools
+from typing import Tuple, List, Iterator
 
 from exceptions.schedule_exceptions import TransactionOperationExecutionException, OperandVariableNotFoundException
 from schedule.operation import Operation
@@ -22,12 +23,13 @@ class ResultSerializability:
         self.schedule = schedule
 
         self.schedule_executed = False
-        self.schedule_final_database_state: InMemoryState = {}
+        self.schedule_execution_final_database_state: InMemoryState = {}
         self.schedule_execution_metadata: ExecutionMetadata = []
         self.schedule_execution_error = ""
 
         self.serializability_checked = False
-        self.serializable_permutation = None
+        self.serializable_permutation: List[int] = []
+        self.serializable_permutation_execution_metadata: ExecutionMetadata = []
         self.is_serializable = False
 
     def run_schedule(self, variable_initial_values: dict[str, int]) -> bool:
@@ -35,7 +37,7 @@ class ResultSerializability:
         try:
             database_state, execution_metadata = ResultSerializability.__run_transaction_operations(
                 variable_initial_values, self.schedule.schedule_operations)
-            self.schedule_final_database_state = database_state
+            self.schedule_execution_final_database_state = database_state
             self.schedule_execution_metadata = execution_metadata
             return True
         except TransactionOperationExecutionException as e:
@@ -44,10 +46,36 @@ class ResultSerializability:
             self.schedule_execution_error = e.get_message()
             return False
 
-    def is_result_serializable(self) -> bool:
+    def is_result_serializable(self, variable_initial_values: dict[str, int]) -> bool:
+        if not self.schedule_executed:
+            raise ValueError("Execute schedule before checking serializability")
+
         self.serializability_checked = True
 
-        self.is_serializable = False
+        # noinspection PyTypeChecker
+        transaction_operations_items: Tuple[Tuple[int, list[Operation]]] = self.schedule.transaction_operations.items()
+        for transactions_permutation in itertools.permutations(transaction_operations_items):
+            # Variable to keep order of transactions
+            transactions_executions_order: List[int] = []
+
+            # Simulate iterator that returns tuple of form <transaction number, transaction operation>
+            def transaction_operation_iterator():
+                for transaction_operations in transactions_permutation:
+                    transaction_number, operations = transaction_operations
+                    transactions_executions_order.append(transaction_number)
+                    for operation in operations:
+                        yield transaction_number, operation
+
+            try:
+                database_state, execution_metadata = ResultSerializability.__run_transaction_operations(
+                    variable_initial_values, transaction_operation_iterator())
+                if self.schedule_execution_final_database_state == database_state:
+                    self.is_serializable = True
+                    self.serializable_permutation_execution_metadata = execution_metadata
+                    self.serializable_permutation = transactions_executions_order
+                    return True
+            except TransactionOperationExecutionException as e:
+                pass
 
         return self.is_serializable
 
@@ -57,12 +85,18 @@ class ResultSerializability:
         if not self.is_serializable:
             raise ValueError("Schedule is not result serializable")
 
-        pass
+        def serializable_schedule_operations():
+            for transaction_number in self.serializable_permutation:
+                transaction_operations = self.schedule.transaction_operations[transaction_number]
+                for operation in transaction_operations:
+                    yield transaction_number, operation
+
+        return serializable_schedule_operations(), self.serializable_permutation_execution_metadata
 
     @staticmethod
     def __run_transaction_operations(
             initial_database_state: InMemoryState,
-            transaction_operations: List[Tuple[int, Operation]]) -> Tuple[InMemoryState, ExecutionMetadata]:
+            transaction_operations: Iterator[Tuple[int, Operation]]) -> Tuple[InMemoryState, ExecutionMetadata]:
         """
         Retrieve list of operations in form of transaction (tuple of <transaction number, operation>) and
         execute them serially.

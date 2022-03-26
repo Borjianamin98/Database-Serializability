@@ -37,7 +37,12 @@ def start(file_path: str):
 
     result_serializability = ResultSerializability(schedule)
     schedule_execution_successful = result_serializability.run_schedule(variable_initial_values)
-    is_result_serializable = result_serializability.is_result_serializable()
+    is_result_serializable = result_serializability.is_result_serializable(variable_initial_values)
+    result_serializable_schedule_operations = None
+    result_serializable_execution_metadata = None
+    if is_result_serializable:
+        result_serializable_schedule_operations, result_serializable_execution_metadata = \
+            result_serializability.get_serializable_schedule()
 
     view_generator.generate_view(
         schedule_operations=schedule.schedule_operations,
@@ -52,8 +57,10 @@ def start(file_path: str):
         schedule_execution_successful=schedule_execution_successful,
         schedule_execution_error=result_serializability.schedule_execution_error,
         schedule_execution_metadata=result_serializability.schedule_execution_metadata,
-        schedule_execution_final_database_state=result_serializability.schedule_final_database_state,
+        schedule_execution_final_database_state=result_serializability.schedule_execution_final_database_state,
 
         is_result_serializable=is_result_serializable,
+        result_serializable_schedule_operations=result_serializable_schedule_operations,
+        result_serializable_execution_metadata=result_serializable_execution_metadata,
     )
     # view_generator.open_index_html()
