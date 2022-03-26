@@ -64,4 +64,4 @@ def start(file_path: str):
         result_serializable_schedule_operations=result_serializable_schedule_operations,
         result_serializable_execution_metadata=result_serializable_execution_metadata,
     )
-    # view_generator.open_index_html()
+    view_generator.open_index_html()
