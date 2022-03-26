@@ -1,3 +1,6 @@
+from typing import List
+
+
 class InvalidScheduleCommandException(Exception):
     """
     Raised for errors in the input file format regarding invalid schedule command.
@@ -11,7 +14,7 @@ class InvalidScheduleCommandException(Exception):
         super().__init__(self.message)
 
 
-class InvalidTransactionOperationOrderException(Exception):
+class TransactionOperationExecutionException(Exception):
     """
     Raised when operations are not executable. (For example read variable from database which does not
     exist in database)
@@ -20,9 +23,16 @@ class InvalidTransactionOperationOrderException(Exception):
         message: description of error
     """
 
-    def __init__(self, message: str):
+    def __init__(self, message: str, metadata: List[str]):
         self.message = message
+        self.metadata = metadata
         super().__init__(self.message)
+
+    def get_metadata(self) -> List[str]:
+        return self.metadata
+
+    def get_message(self) -> str:
+        return self.message
 
 
 class OperandVariableNotFoundException(Exception):

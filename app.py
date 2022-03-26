@@ -36,10 +36,8 @@ def start(file_path: str):
     view_serializability.export_polygraph(POLYGRAPH_FILE_PATH)
 
     result_serializability = ResultSerializability(schedule)
+    schedule_execution_successful = result_serializability.run_schedule(variable_initial_values)
     is_result_serializable = result_serializability.is_result_serializable()
-    _, metadata = ResultSerializability.run_transaction_operations(variable_initial_values,
-                                                                   schedule.schedule_operations)
-    print(metadata)
 
     view_generator.generate_view(
         schedule_operations=schedule.schedule_operations,
@@ -50,6 +48,11 @@ def start(file_path: str):
 
         is_view_serializable=is_view_serializable,
         view_serializable_schedule=view_serializable_schedule,
+
+        schedule_execution_successful=schedule_execution_successful,
+        schedule_execution_error=result_serializability.schedule_execution_error,
+        schedule_execution_metadata=result_serializability.schedule_execution_metadata,
+        schedule_execution_final_database_state=result_serializability.schedule_final_database_state,
 
         is_result_serializable=is_result_serializable,
     )

@@ -1,5 +1,6 @@
 {%- from "macros.j2.html" import embeded_graph with context %}
 {%- from "macros.j2.html" import print_serializable_schedule with context %}
+{%- from "macros.j2.html" import transaction_operations_table with context %}
 {%- from "navbar.j2.html" import navbar_model with context %}
 {%- call navbar_model() %}
     <h1 class="mt-5 mb-4">Schedule Serializability</h1>
@@ -77,7 +78,22 @@
     <a id="result_serializability" href="#result_serializability" class="h2 text-decoration-none my-4">
         Result Serializability
     </a>
+    <p class="lead">In this section, we check schedule in terms of the result of execution.</p>
     <p class="lead">
-        In this section, ... <br/>
+        First, we execute the schedule virtually. The result of its execution is as follows
+        (in each line you will see the result of the command)
     </p>
+    {{ transaction_operations_table(schedule_operations, schedule_execution_metadata) | indent(8) }}
+    {%- if schedule_execution_successful %}
+        <p class="lead">Final state of database after execution of schedule:</p>
+        <dl class="row">
+            {%- for variable_name, variable_value in schedule_execution_final_database_state.items() %}
+                <dt class="col-1 text-truncate">{{ variable_name }}</dt>
+                <dd class="col-1 text-truncate">{{ variable_value }}</dd>
+            {%- endfor %}
+        </dl>
+    {%- else %}
+        <p class="lead text-danger">{{ schedule_execution_error | replace("\n", "<br/>") }}</p>
+    {%- endif %}
+
 {%- endcall -%}
