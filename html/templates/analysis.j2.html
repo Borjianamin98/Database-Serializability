@@ -103,6 +103,8 @@
                 as the schedule, so schedule is <strong>serializable</strong> based on result equivalent criteria.
             </p>
             {{ transaction_operations_table(result_serializable_schedule_operations, result_serializable_execution_metadata) | indent(12) }}
+            <p class="lead mt-4">Equivalent serial schedule: </p>
+            {{ print_serializable_schedule(result_serializable_schedule) | indent(8) }}
         {%- else %}
             <p class="lead">
                 According to the executions, none of the permutation has the same output as the schedule and therefore

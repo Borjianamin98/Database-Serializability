@@ -1,5 +1,20 @@
 import re
-from typing import Iterator, List
+
+
+def is_float(input_string: str) -> bool:
+    try:
+        float(input_string)
+        return True
+    except ValueError:
+        return False
+
+
+def is_int(input_string: str) -> bool:
+    try:
+        int(input_string)
+        return True
+    except ValueError:
+        return False
 
 
 def remove_spaces(input_string: str) -> str:

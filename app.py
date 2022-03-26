@@ -60,6 +60,7 @@ def start(file_path: str):
         schedule_execution_final_database_state=result_serializability.schedule_execution_final_database_state,
 
         is_result_serializable=is_result_serializable,
+        result_serializable_schedule=result_serializability.serializable_permutation,
         result_serializable_schedule_operations=result_serializable_schedule_operations,
         result_serializable_execution_metadata=result_serializable_execution_metadata,
     )

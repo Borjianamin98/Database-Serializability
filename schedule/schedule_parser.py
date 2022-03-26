@@ -7,6 +7,7 @@ from schedule.operation import Operation
 from schedule.schedule import Schedule
 from utility.dict_utility import compute_if_absent
 from utility.file_utility import read_file_line_by_line
+from utility.string_utility import is_int
 
 
 def extract_transaction_operation(schedule_command_operation: str) -> Operation:
@@ -28,7 +29,7 @@ def extract_transaction_operation(schedule_command_operation: str) -> Operation:
 
     # Handle arithmetic operation
     # Regex to match string of form 'x = y op z' (y or z can be numbers)
-    matches = re.match(r"^([a-z])=([a-z]|-?[0-9]+)([+*\-/])([a-z]|-?[0-9]+)$", schedule_command_operation)
+    matches = re.match(r"^([a-z]+)=([a-z]+|-?\d*\.?\d+)([+*\-/])([a-z]+|-?\d*\.?\d+)$", schedule_command_operation)
     if matches:
         result_var, operand1_var, operator, operand2_var = matches.groups()
         return Operation(operator, operand1_var, operand2_var, result_var)
@@ -59,9 +60,9 @@ def extract_schedule_command(schedule_command: str) -> tuple[int, int, Operation
         raise InvalidScheduleCommandException(
             f"Schedule command must consist of 3 different parts separated by commas: "
             f"extracted parts = {command_parts}")
-    if not str.isnumeric(command_parts[0]):
+    if not is_int(command_parts[0]):
         raise InvalidScheduleCommandException(f"Schedule command line number should be a number: {command_parts[0]}")
-    if not str.isnumeric(command_parts[1]):
+    if not is_int(command_parts[1]):
         raise InvalidScheduleCommandException(
             f"Schedule command transaction number should be a number: {command_parts[1]}")
     command_line_number = int(command_parts[0])

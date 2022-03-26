@@ -1,4 +1,5 @@
 from exceptions.schedule_exceptions import OperandVariableNotFoundException
+from utility.string_utility import is_float
 
 
 class Operation:
@@ -46,11 +47,11 @@ class Operation:
     def is_read_write_on(self, variable: str):
         return self.operand1 == variable
 
-    def do_arithmetic(self, variables: dict[str, int]) -> int:
+    def do_arithmetic(self, variables: dict[str, float]) -> float:
         assert self.is_arithmetic()
         return eval(self.get_with_actual_value(variables))
 
-    def get_with_actual_value(self, variables: dict[str, int]) -> str:
+    def get_with_actual_value(self, variables: dict[str, float]) -> str:
         """
         Return arithmetic operation in a from that actual value replaced variable names
         :param variables: variable values
@@ -63,9 +64,9 @@ class Operation:
         )
 
     @staticmethod
-    def __get_operand_value(variables: dict[str, int], operand: str) -> int:
-        if str.isnumeric(operand):
-            return int(operand)
+    def __get_operand_value(variables: dict[str, float], operand: str) -> float:
+        if is_float(operand):
+            return float(operand)
         else:
             if operand not in variables:
                 raise OperandVariableNotFoundException(operand)

@@ -5,9 +5,10 @@ from exceptions.file_exceptions import InvalidFileFormatException
 from schedule import schedule_parser
 from schedule.schedule import Schedule
 from utility.file_utility import read_file_line_by_line
+from utility.string_utility import is_float
 
 
-def extract_variable_initial_values(input_file_path: str) -> tuple[int, dict[str, int]]:
+def extract_variable_initial_values(input_file_path: str) -> tuple[int, dict[str, float]]:
     """
     Reads the input file until it sees "#" at the beginning of the line
     and extracts the initial value of the variable
@@ -16,7 +17,7 @@ def extract_variable_initial_values(input_file_path: str) -> tuple[int, dict[str
     """
 
     # Key: variable name, Value: initial value
-    variable_initial_values: dict[str, int] = {}
+    variable_initial_values: dict[str, float] = {}
 
     with open(input_file_path) as file:
         for line_number, line_content in read_file_line_by_line(file):
@@ -31,18 +32,18 @@ def extract_variable_initial_values(input_file_path: str) -> tuple[int, dict[str
                 if not re.match("^[a-z]$", line_parts[0]):
                     raise InvalidFileFormatException(
                         line_number, line_content, f"Variable names should be in [a-z] format: {line_parts[0]}")
-                if not str.isnumeric(line_parts[1]):
+                if not is_float(line_parts[1]):
                     raise InvalidFileFormatException(
                         line_number, line_content,
-                        f"Variable values should be a positive integer number: {line_parts[1]}")
+                        f"Variable values should be a number: {line_parts[1]}")
 
-                variable_initial_values[line_parts[0]] = int(line_parts[1])
+                variable_initial_values[line_parts[0]] = float(line_parts[1])
             else:
                 break
         return line_number, variable_initial_values
 
 
-def parse(file_path: str) -> Tuple[dict[str, int], Schedule]:
+def parse(file_path: str) -> Tuple[dict[str, float], Schedule]:
     """
     Parse give input file and returns extracted information in form of useful data structures.
     The information in the file is in the following format:

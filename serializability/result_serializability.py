@@ -7,7 +7,7 @@ from schedule.schedule import Schedule
 from utility.string_utility import list_to_html_string
 
 ExecutionMetadata = List[str]
-InMemoryState = dict[str, int]  # Key: variable name, Value: variable value
+InMemoryState = dict[str, float]  # Key: variable name, Value: variable value
 
 
 class ResultSerializability:
@@ -32,7 +32,7 @@ class ResultSerializability:
         self.serializable_permutation_execution_metadata: ExecutionMetadata = []
         self.is_serializable = False
 
-    def run_schedule(self, variable_initial_values: dict[str, int]) -> bool:
+    def run_schedule(self, variable_initial_values: dict[str, float]) -> bool:
         self.schedule_executed = True
         try:
             database_state, execution_metadata = ResultSerializability.__run_transaction_operations(
@@ -46,7 +46,7 @@ class ResultSerializability:
             self.schedule_execution_error = e.get_message()
             return False
 
-    def is_result_serializable(self, variable_initial_values: dict[str, int]) -> bool:
+    def is_result_serializable(self, variable_initial_values: dict[str, float]) -> bool:
         if not self.schedule_executed:
             raise ValueError("Execute schedule before checking serializability")
 
@@ -74,8 +74,8 @@ class ResultSerializability:
                     self.serializable_permutation_execution_metadata = execution_metadata
                     self.serializable_permutation = transactions_executions_order
                     return True
-            except TransactionOperationExecutionException as e:
-                pass
+            except TransactionOperationExecutionException:
+                pass  # Ignore error and try another permutation
 
         return self.is_serializable
 
